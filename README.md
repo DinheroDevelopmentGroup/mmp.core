@@ -15,4 +15,6 @@ Generated using [M3](https://github.com/DinheroDevelopmentGroup/modular-minecraf
   - [x] on too far
 - [x] Multiple Cores
 - [ ] non-chat
+  - [ ] placement
+  - [ ] recycling
 - [ ] Sync Chains
