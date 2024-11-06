@@ -1,4 +1,6 @@
 {
-  "name": "ddg.core",
-  "dependencies": []
+  "dependencies": [
+    "https://github.com/DinheroDevelopmentGroup/mmp.pose.git"
+  ],
+  "name": "ddg.core"
 }

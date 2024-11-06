@@ -1,6 +1,7 @@
 import { Vec3 } from 'vec3';
 
 import chat from '../ddg.chat/local.js';
+import { pose } from '../ddg.pose/local.js';
 import proxy from '../internal.proxy/local.js';
 
 export class Core {
@@ -66,36 +67,24 @@ export const core = new Core(new Vec3(NaN, 0, NaN), new Vec3(16, 16, 16));
 
 export default core;
 
-interface PositionPacketData {
-  x: number;
-  y: number;
-  z: number;
-  onGround: boolean;
-}
+pose.bi.on('position', () => {
+  const position = pose.position.clone();
 
-proxy.downstream.once('login', (_packet) => {
-  // TODO: position module
-  proxy.upstream.on('position', async (packet) => {
-    const data = packet.data as PositionPacketData;
+  // no scalar division 😭
+  position.scale(1 / 16);
+  position.floor();
+  position.scale(16);
 
-    const position = new Vec3(data.x, data.y, data.z);
+  if (
+    Math.abs(core.position.x - position.x) < 256 &&
+    Math.abs(core.position.z - position.z) < 256
+  )
+    return;
 
-    // no scalar division 😭
-    position.scale(1 / 16);
-    position.floor();
-    position.scale(16);
+  core.position.x = position.x;
+  core.position.z = position.z;
 
-    if (
-      Math.abs(core.position.x - position.x) < 256 &&
-      Math.abs(core.position.z - position.z) < 256
-    )
-      return;
-
-    core.position.x = position.x;
-    core.position.z = position.z;
-
-    core.fill();
-  });
+  core.fill();
 });
 
 chat.downstream.on('system', (data, packet) => {
@@ -119,7 +108,7 @@ chat.downstream.on('system', (data, packet) => {
 
   if (translate !== 'advMode.setCommand.success') return;
 
-  console.info(`canceled ${packet.name}`);
+  console.debug(`canceled ${packet.name}`);
 
   packet.canceled = true;
 });
