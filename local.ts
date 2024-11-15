@@ -108,7 +108,5 @@ chat.downstream.on('system', (data, packet) => {
 
   if (translate !== 'advMode.setCommand.success') return;
 
-  console.debug(`canceled ${packet.name}`);
-
   packet.canceled = true;
 });
