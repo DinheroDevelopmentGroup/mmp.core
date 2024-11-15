@@ -87,6 +87,12 @@ pose.bi.on('position', () => {
   core.fill();
 });
 
+proxy.downstream.on('respawn', (packet) => {
+  if (packet.canceled) return;
+
+  core.fill();
+});
+
 chat.downstream.on('system', (data, packet) => {
   if (packet === undefined) return;
 
